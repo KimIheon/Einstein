@@ -1,16 +1,24 @@
 GlowScript 2.7 VPython
-scene.width = scene.height = 600
 
-L = 50
-G = 6.67384 * 10**(-11) 
-scene.center = vec(0.05*L,0.2*L,0)
-scene.range = 1.3*L
+pixel = 8
+
+G = 6.67384 * 10 ** (19) * (1/149597870) ** 3
+ms = 1.9891
+rs = 6.955 * 10 ** 5
+c = 299792458 * 1/149597870
+
+class Planet:
+    def __init__(self, mass, rad, pose):
+        self.mass = mass
+        self.planet = sphere(pos = pose, radius = rad) 
+        
+    def field(self, x, y):
+        if (x - self.planet.pos.x) ** 2 + (y - self.planet.pos.z) ** 2 >= self.planet.radius ** 2:
+            return -G * self.mass / ((x - self.planet.pos.x) ** 2 + (y - self.planet.pos.z) ** 2)
+        return -G * self.mass / self.planet.radius ** 2
 
 class plot3D:
     def __init__(self, f, xmin, xmax, ymin, ymax, zmin, zmax):
-        # The x axis is labeled y, the z axis is labeled x, and the y axis is labeled z.
-        # This is done to mimic fairly standard practive for plotting
-        #     the z value of a function of x and y.
         self.f = f
         self.xmin = xmin
         self.xmax = xmax
@@ -19,67 +27,65 @@ class plot3D:
         self.zmin = zmin
         self.zmax = zmax
         
-        R = L/100
-    
         self.vertices = []
-        for x in range(L):
-            for y in range(L):
-                val = self.evaluate(x,y)
-                self.vertices.append(self.make_vertex( x, y, val ))
-        
+        cookie = []
+        for y in range(ymin * pixel, ymax * pixel + 1):
+            for x in range(xmin * pixel, xmax * pixel + 1):
+                val = self.f(float(x) / pixel, float(y) / pixel)
+                cookie.append(self.make_vertex(x / pixel, y / pixel, min(zmax, max(val, zmin))))
+            self.vertices.append(cookie)
+            cookie = []
         self.make_quads()
         self.make_normals()
-        
-    def evaluate(self, x, y):
-        d = L-2
-        return (d/(self.zmax-self.zmin)) * (self.f(self.xmin+x*(self.xmax-self.xmin)/d, self.ymin+y*(self.ymax-self.ymin)/d)-self.zmin)
     
     def make_quads(self):
-        # Create the quad objects, based on the vertex objects already created.
-        for x in range(L-2):
-            for y in range(L-2):
-                v0 = self.get_vertex(x,y)
-                v1 = self.get_vertex(x+1,y)
-                v2 = self.get_vertex(x+1, y+1)
-                v3 = self.get_vertex(x, y+1)
+        for x in range(self.xmin * pixel, self.xmax * pixel):
+            for y in range(self.ymin  * pixel, self.ymax  * pixel):
+                v0 = self.get_vertex(x / pixel, y / pixel)
+                v1 = self.get_vertex((x + 1) / pixel, y / pixel)
+                v2 = self.get_vertex((x + 1) / pixel, (y + 1) / pixel)
+                v3 = self.get_vertex(x / pixel, (y + 1) / pixel)
                 quad(vs=[v0, v1, v2, v3])
-        
+                
     def make_normals(self):
-        # Set the normal for each vertex to be perpendicular to the lower left corner of the quad.
-        # The vectors a and b point to the right and up around a vertex in the xy plance.
-        for i in range(L*L):
-            x = int(i/L)
-            y = i % L
-            if x == L-1 or y == L-1: continue
-            v = self.vertices[i]
-            a = self.vertices[i+L].pos - v.pos
-            b = self.vertices[i+1].pos - v.pos
-            v.normal = cross(a,b)
-    
+        for x in range(self.xmin * pixel, self.xmax * pixel):
+            for y in range(self.ymin  * pixel, self.ymax  * pixel):
+                v = self.get_vertex(x / pixel, y / pixel)
+                a = self.get_vertex(x / pixel, (y + 1) / pixel).pos - v.pos
+                b = self.get_vertex((x + 1) / pixel, y / pixel).pos - v.pos
+                v.normal = cross(a,b)
+        
     def replot(self):
-        for i in range(L*L):
-            x = int(i/L)
-            y = i % L
-            v = self.vertices[i]
-            v.pos.y = self.evaluate(x,y)
+        for x in range(self.xmin * pixel, self.xmax * pixel + 1):
+            for y in range(self.ymin * pixel, self.ymax * pixel + 1):
+                v = self.get_vertex(x / pixel, y / pixel)
+                v.pos.y = min(self.zmax, max(self.f(x / pixel, y / pixel), self.zmin))
         self.make_normals()
                 
     def make_vertex(self,x,y,value):
-        return vertex(pos=vec(y,value,x), color=color.cyan, normal=vec(0,1,0))
+        return vertex(pos=vec(y,value,x), color=color.white)
         
     def get_vertex(self,x,y):
-        return self.vertices[x*L+y]
+        return self.vertices[round((x - self.xmin) * pixel)][round((y - self.ymin) * pixel)]
         
     def get_pos(self,x,y):
         return self.get_vertex(x,y).pos
 
 t = 0
-dt = 0.02
-def f(x, y):
-    # Return the value of the function of x and y:
-    return -0.1 / ((x + cos(t))**2 + (y + sin(t))**2) + 1
+dt = 0.001
 
-p = plot3D(f, -1, 1, -1, 1, -1, 1) # function, xmin, xmax, ymin, ymax (defaults 0, 1, 0, 1, 0, 1)
+sun = Planet(ms * 480000, rs * 1/149597870, vector(0, 0, 0))
+
+def f(x, y):
+    return sun.field(x, y)
+    
+def ag(x, y):
+    return sun.field(x, y) * norm(vector(x, 0, y) - sun.planet.pos)
+
+p = plot3D(f, -15, 15, -15, 15, -20, 4)
+
+photon = sphere(pos=vector(-15, 0, -10), radius=0.0001, make_trail=True)
+photon.vel =vector(1, 0, 0) * c
 
 run = True
 def running(ev):
@@ -87,10 +93,14 @@ def running(ev):
     run = not run
 
 scene.bind('mousedown', running)
-scene.forward = vec(-0.7,-0.5,-1)
 
 while True:
-    rate(30)
+    rate(10)
     if run:
+        if mag(vector(photon.pos.x, 0, photon.pos.z) - sun.planet.pos) > sun.planet.radius:
+            if mag(vector(photon.pos.x, 0, photon.pos.z) - sun.planet.pos) < 20:
+                photon.pos = photon.pos + photon.vel
+                photon.vel = photon.vel + ag(photon.pos.x, photon.pos.z)
+                photon.pos.y = f(photon.pos.x, photon.pos.z)
         p.replot()
         t += dt
