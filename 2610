@@ -1,0 +1,399 @@
+[프로젝트 2 :일반 상대성 이론의 시각화 ]
+1)연구소 이름 :HGOOSE LAB
+2)연구소가 해결하려는 문제 : 일반 상대성 이론을 잘 이해하지 못하고 있는 기미헌
+3)연구소의 깃헙 링크 :https://github.com/KimIheon/Einstein
+4-1)수정하거나 추가하고 싶은 내용
+일반 상대성 이론의 현상이긴 하나, 이것을 일반 상대성이론이라고 보기에는 정말 힘들다. 왜냐하면, 그냥 구멍 주변에서 움직이는 구체의 움직임일 수 있고, 또한 일반 상대성이론에서 보여주는 길이 수축, 시간 팽창은 찾아 볼 수 없기 떄문이다.
+4-2)내가 기여한 내용
+특수 상대론으로 설명 가능. 길이 수축, 시간 팽창으로 설명 가능. Vpython에서 길이를 변화시키고, 다른 관측자에 대해 각각의 상황을 보여주면 가능할 듯.
+우주선을 쏘면, 두 관찰자를 각각 기준으로 펄스를 한곳에서 쏴서 도플러 효과를 관찰하는데, 상대론적으로 확인해본다.
+펄스를 쏴서 도플러 효과로 설명할 수 있다. Vpython에서 충분히 시각화할 수 있을 것이다.
+블랙홀 질량을 M이라 한 뒤, 블랙홀로부터 x만큼 떨어진 거리에서 받는 중력가속도를 구한 뒤, 이 가속도를 경사면으로 변환한다. 이를 통해 시공간의 휨을 표현할 수 있을 것이다.
+d가 해결되면 따라서 해결될 듯 하다.
+에너지 보존 식에 대입하여 빛의 속도 c로도 절대 빠져나오지 못하는 x의 최댓값을 구하면 될 듯 하다.
+이 주제는 우리가 하기엔 무리가 조금 있을 듯 하다. 간접적으로 방법이 있긴 하다.  블랙홀이 움직인다는 뜻은 아까 d에서 표현한 경사로가 움직인다는 뜻이므로 간접적으로라도 시공간의 움직임을 표현할 수 있을 듯 하다.
+
+GlowScript 2.8 VPython
+#중력상수
+G = 200
+#지구, 질량
+Earth = sphere(pos = vec(20,0,0), radius = 2)
+Earth_m = 7
+#행성X, 질량
+X = sphere(pos = vec(-20,0,0), radius = 2)
+X_m = 5
+
+#우주선,질량,속도,가속도
+Spaceship = sphere(pos = vec(5,0,0), radius = 0.5)
+Spaceship_m = 1
+Spaceship.velocity = vec(-15,7,0)
+ship_a = 0
+
+dt = 0.01
+#총 중력
+F_total = 0
+
+#파동20개 구현
+Wave1 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave2 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave3 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave4 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave5 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave6 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave7 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave8 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave9 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave10 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave11 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave12 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave13 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave14 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave15 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave16 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave17 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave18 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave19 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+Wave20 = ring(pos=vector(10,0,0), axis=vector(0,0,10), radius=0.5, thickness=0.1, opacity = 0.2)
+
+#우주선의 상대적 위치
+R_1 = Spaceship.pos - vec(10,0,0)
+#우주선과 파동이 만난 횟수
+n = 0
+#우주선과 파동의 위치관계
+count = 0
+#count를 판단하는 기준
+Q = True
+#반지름
+P = 0.5
+#시간
+Time = 0
+
+
+#감마
+Gamma = 1
+
+while True: #반복
+    #rate(100) #while이 반복되는 기준시간
+    rate(100 * Gamma) #시간팽창
+    
+    Time += 0.15 # 시간 추가
+    P += 0.15 #반지름 증가
+    
+    #최초의 파동 방출
+    if Wave1.radius < 50:
+        Wave1.radius = P
+    #일정시간 지나면 움직이지않고, 투명해짐
+    else:
+        Wave1.opacity = 0
+        
+    #순차적으로 나머지 파동 방출
+    if Time >=2:
+        if Wave2.radius < 50:
+            Wave2.radius = P-2
+        else:
+            Wave2.opacity = 0 
+    if Time >=4:
+        if Wave3.radius < 50:
+            Wave3.radius = P-4
+        else:
+            Wave3.opacity = 0
+    if Time >=6:
+        if Wave4.radius < 50:
+            Wave4.radius = P-6
+        else:
+            Wave4.opacity = 0
+    if Time >=8:
+        if Wave5.radius < 50:
+            Wave5.radius = P-8
+        else:
+            Wave5.opacity = 0
+    if Time >=10:
+        if Wave6.radius < 50:
+            Wave6.radius = P-10
+        else:
+            Wave6.opacity = 0
+    if Time >=12:
+        if Wave7.radius < 50:
+            Wave7.radius = P-12
+        else:
+            Wave7.opacity = 0
+    if Time >=14:
+        if Wave8.radius < 50:
+            Wave8.radius = P-14
+        else:
+            Wave8.opacity = 0
+    if Time >=16:
+        if Wave9.radius < 50:
+            Wave9.radius = P-16
+        else:
+            Wave9.opacity = 0
+    if Time >=18:
+        if Wave10.radius < 50:
+            Wave10.radius = P-18
+        else:
+            Wave10.opacity = 0
+    if Time >=20:
+        if Wave11.radius < 50:
+            Wave11.radius = P-20
+        else:
+            Wave11.opacity = 0
+    if Time >=22:
+        if Wave12.radius < 50:
+            Wave12.radius = P-22
+        else:
+            Wave12.opacity = 0
+    if Time >=24:
+        if Wave13.radius < 50:
+            Wave13.radius = P-24
+        else:
+            Wave13.opacity = 0
+    if Time >=26:
+        if Wave14.radius < 50:
+            Wave14.radius = P-26
+        else:
+            Wave14.opacity = 0
+    if Time >=28:
+        if Wave15.radius < 50:
+            Wave15.radius = P-28
+        else:
+            Wave15.opacity = 0
+    if Time >=30:
+        if Wave16.radius < 50:
+            Wave16.radius = P-30
+        else:
+            Wave16.opacity = 0
+    if Time >=32:
+        if Wave17.radius < 50:
+            Wave17.radius = P-32
+        else:
+            Wave17.opacity = 0
+    if Time >=34:
+        if Wave18.radius < 50:
+            Wave18.radius = P-34
+        else:
+            Wave18.opacity = 0
+    if Time >=36:
+        if Wave19.radius < 50:
+            Wave19.radius = P-36
+        else:
+            Wave19.opacity = 0
+    if Time >=38:
+        if Wave20.radius < 50:
+            Wave20.radius = P-38
+        else:
+            Wave20.opacity = 0
+    
+    #길이수축
+    Earth.pos = Spaceship.pos - (Spaceship.pos - vec(20,0,0)) / Gamma 
+    X.pos = Spaceship.pos - (Spaceship.pos - vec(-20,0,0)) / Gamma 
+    
+    #우주선의 상대적 위치를 통해 두 행성에 의한 중력의 총합을 구한다
+    r_ES = Spaceship.pos - Earth.pos
+    r_XS = Spaceship.pos - X.pos
+    F_ES = -G / mag(r_ES)**(3) * Earth_m * Spaceship_m * r_ES
+    F_XS = -G / mag(r_XS)**(3) * X_m * Spaceship_m * r_XS
+    F_total = F_ES + F_XS
+    
+    #이를통해 우주선의 가속도와 속도, 위치를 업데이트한다
+    Ship_a = F_total / Spaceship_m
+    Spaceship.velocity += Ship_a * dt
+    Spaceship.pos += Spaceship.velocity * dt
+    
+    #감마 갱신
+    Gamma = 1 / (1 - (mag(Spaceship.velocity)/250)**0.5)
+    
+    #파동의 중심(지구)에 대한 우주선의 상대적 위치
+    R_1 = Spaceship.pos - vec(10,0,0)
+    
+    #파동을 안 만난상태에서(count=0) 우주선이 파동과 만나면, count=1(만남), n+=1
+    if mag(R_1) < Wave1.radius+0.5 and mag(R_1) > Wave1.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)  
+    #이전의 count의 값이1이면 n갱신x. 모든 파동에 순차적으로 구현
+    elif mag(R_1) < Wave2.radius+0.5 and mag(R_1) > Wave2.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave3.radius+0.5 and mag(R_1) > Wave3.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave4.radius+0.5 and mag(R_1) > Wave4.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave5.radius+0.5 and mag(R_1) > Wave5.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave6.radius+0.5 and mag(R_1) > Wave6.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave7.radius+0.5 and mag(R_1) > Wave7.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave8.radius+0.5 and mag(R_1) > Wave8.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave9.radius+0.5 and mag(R_1) > Wave9.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave10.radius+0.5 and mag(R_1) > Wave10.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave11.radius+0.5 and mag(R_1) > Wave11.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave12.radius+0.5 and mag(R_1) > Wave12.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave13.radius+0.5 and mag(R_1) > Wave13.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave14.radius+0.5 and mag(R_1) > Wave14.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave15.radius+0.5 and mag(R_1) > Wave15.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave16.radius+0.5 and mag(R_1) > Wave16.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave17.radius+0.5 and mag(R_1) > Wave17.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave18.radius+0.5 and mag(R_1) > Wave18.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave19.radius+0.5 and mag(R_1) > Wave19.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+    elif mag(R_1) < Wave20.radius+0.5 and mag(R_1) > Wave20.radius-0.5:
+        Q = False
+        if count == 0:
+            count = 1
+            n += 1
+            print(n)
+
+    #어느곳에도 안걸치면 Q=True. count=0(안만남)
+    if mag(R_1) > Wave1.radius+0.5 or mag(R_1) < Wave1.radius-0.5:
+        if Q == True:        
+            count = 0
+    #모든 파동에 대해 구현        
+    if mag(R_1) > Wave2.radius+0.5 or mag(R_1) < Wave2.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave3.radius+0.5 or mag(R_1) < Wave3.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave4.radius+0.5 or mag(R_1) < Wave4.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave5.radius+0.5 or mag(R_1) < Wave5.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave6.radius+0.5 or mag(R_1) < Wave6.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave7.radius+0.5 or mag(R_1) < Wave7.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave8.radius+0.5 or mag(R_1) < Wave8.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave9.radius+0.5 or mag(R_1) < Wave9.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave10.radius+0.5 or mag(R_1) < Wave10.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave11.radius+0.5 or mag(R_1) < Wave11.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave12.radius+0.5 or mag(R_1) < Wave12.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave13.radius+0.5 or mag(R_1) < Wave13.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave14.radius+0.5 or mag(R_1) < Wave14.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave15.radius+0.5 or mag(R_1) < Wave15.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave16.radius+0.5 or mag(R_1) < Wave16.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave17.radius+0.5 or mag(R_1) < Wave17.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave18.radius+0.5 or mag(R_1) < Wave18.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave19.radius+0.5 or mag(R_1) < Wave19.radius-0.5:
+        if Q == True:        
+            count = 0
+    if mag(R_1) > Wave20.radius+0.5 or mag(R_1) < Wave20.radius-0.5:
+        if Q == True:      
+    
+    #Q초기화
+    Q = True
+
+5)내가 기여한 내용에 대한 설명
+일반 상대성 이론의 주축이라고 볼 수 있는 길이 수축, 시간 팽창을 보여주는 코드를 작성하여 그 예시를보여주는 것을 보여주었다. 이를 참고로 다시 이헌이는 일반 상대성이론에 대한 자신의 코드를 작성할 수 있을것이다.
+일반 상대성이론을 보여주는 것에대한 방향성을 보여준 것이다. 애초에 보여주는 방식이 잘못되어 수정해도 의미가 없다고 생각이 들었다.
+6)내가 기여한 내용의 반영 여부 : (O,X 중 선택해주세요)
